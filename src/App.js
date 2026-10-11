@@ -8,7 +8,7 @@ import WatchHistory from './WatchHistory';
 const url = 'https://www.omdbapi.com?apikey=d008934e'
 
 
-const App = () => {
+const Home = () => {
 
   const [movie, setMovie] = useState();
   const [searchTerm, setSearchTerm] = useState('');
@@ -44,10 +44,16 @@ const App = () => {
     <div className='grandParent'>
       <nav className='sideBar'>
         <div>
-          <a href='/'><FontAwesomeIcon className='icon' icon={faHouse} />Home</a>
+          <Link to="/">
+            <FontAwesomeIcon className="icon" icon={faHouse} />
+            Home
+          </Link>
         </div>
         <div>
-          <a href='./'><FontAwesomeIcon className='icon' icon={faClockRotateLeft}/>History</a>
+          <Link to="/history">
+            <FontAwesomeIcon className="icon" icon={faClockRotateLeft} />
+            History
+          </Link>
         </div>
         <div>
           <a href=''><FontAwesomeIcon className='icon' icon={faFolderOpen} />Categories</a>
@@ -103,5 +109,19 @@ const App = () => {
   ;
     </div>
 )}
+
+const App = () => {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route
+          path="/history"
+          element={<WatchHistory movies={[]} onBack={() => window.history.back()} onOpenMovie={() => {}} onRemove={() => {}} />}
+        />
+      </Routes>
+    </BrowserRouter>
+  );
+};
 
 export default App;
