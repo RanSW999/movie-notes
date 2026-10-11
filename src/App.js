@@ -1,9 +1,10 @@
 import {useState, useEffect} from 'react';
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import './App.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass,faHouse,faClockRotateLeft,faFolderOpen} from '@fortawesome/free-solid-svg-icons';
 import MovieCard from './MovieCard';
-
+import WatchHistory from './WatchHistory';
 const url = 'https://www.omdbapi.com?apikey=d008934e'
 
 
@@ -20,14 +21,14 @@ const App = () => {
     setMovie(data.Search)
   }
   useEffect(() => {
-    searchMovie('Spiderman')
+    searchMovie('dark')
   },[])
-useEffect(() => {
-  const timer = setTimeout(async () => {
-    if (searchTerm.length < 2) {
-      setSuggestions([]);
-      return;
-    }
+  useEffect(() => {
+    const timer = setTimeout(async () => {
+      if (searchTerm.length < 2) {
+        setSuggestions([]);
+        return;
+      }
 
     const res = await fetch(
       `${url}&s=${encodeURIComponent(searchTerm)}`
@@ -40,36 +41,52 @@ useEffect(() => {
   return () => clearTimeout(timer);
 }, [searchTerm]);
   return (
-    <div className="app">
-      <h1>Movie Dump</h1>
+    <div className='grandParent'>
+      <nav className='sideBar'>
+        <div>
+          <a href='/'><FontAwesomeIcon className='icon' icon={faHouse} />Home</a>
+        </div>
+        <div>
+          <a href='./'><FontAwesomeIcon className='icon' icon={faClockRotateLeft}/>History</a>
+        </div>
+        <div>
+          <a href=''><FontAwesomeIcon className='icon' icon={faFolderOpen} />Categories</a>
+        </div>
+        <div>
+          <a href=''><FontAwesomeIcon className='icon' icon={faHouse} />Home</a>
+        </div>
+
+      </nav>
+      <div className="app">
+      <h1>Pedantic commentary</h1>
       <div className="search">
-  <input
-    placeholder="Search your movie"
-    value={searchTerm}
-    onChange={(e) => setSearchTerm(e.target.value)}
-  />
+        <input
+          placeholder="Search your movie"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
 
-  <button onClick={() => searchMovie(searchTerm)}>
-    <FontAwesomeIcon icon={faMagnifyingGlass} />
-  </button>
+        <button onClick={() => searchMovie(searchTerm)}>
+          <FontAwesomeIcon icon={faMagnifyingGlass} />
+        </button>
 
-  {suggestions.length > 0 && (
-    <div className="suggestions">
-      {suggestions.map((movie) => (
-        <p
-          key={movie.imdbID}
-          onClick={() => {
-            setSearchTerm(movie.Title);
-            setSuggestions([]);
-            setMovie([movie]);
-          }}
-        >
-          {movie.Title} ({movie.Year})
-        </p>
-      ))}
-    </div>
-  )}
-</div>
+        {suggestions.length > 0 && (
+          <div className="suggestions">
+            {suggestions.map((movie) => (
+              <p
+                key={movie.imdbID}
+                onClick={() => {
+                  setSearchTerm(movie.Title);
+                  setSuggestions([]);
+                  setMovie([movie]);
+                }}
+              >
+                {movie.Title} ({movie.Year})
+              </p>
+            ))}
+          </div>
+        )}
+      </div>
       {
         movie?.length > 0 ? (
           <div className='cont'>
@@ -83,7 +100,8 @@ useEffect(() => {
       }
 
     </div>
-  );
-}
+  ;
+    </div>
+)}
 
 export default App;
