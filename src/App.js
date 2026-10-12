@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass,faHouse,faClockRotateLeft,faFolderOpen} from '@fortawesome/free-solid-svg-icons';
 import MovieCard from './MovieCard';
 import WatchHistory from './WatchHistory';
+import MovieDetailsPage from './MovieDetailsPage';
 const url = 'https://www.omdbapi.com?apikey=d008934e'
 
 
@@ -58,9 +59,6 @@ const Home = () => {
         <div>
           <a href=''><FontAwesomeIcon className='icon' icon={faFolderOpen} />Categories</a>
         </div>
-        <div>
-          <a href=''><FontAwesomeIcon className='icon' icon={faHouse} />Home</a>
-        </div>
 
       </nav>
       <div className="app">
@@ -111,14 +109,49 @@ const Home = () => {
 )}
 
 const App = () => {
+  const [watchedMovies, setWatchedMovies] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('watchedMovies')) || [];
+    } catch {
+      return [];
+    }
+  });
+  const addWatchedMovie = (movie) => {
+  setWatchedMovies(previous => {
+    const updated = previous.some(m => m.imdbID === movie.imdbID)
+      ? previous
+      : [...previous, { ...movie, watchedAt: new Date().toISOString() }];
+
+    localStorage.setItem('watchedMovies', JSON.stringify(updated));
+    return updated;
+  });
+};
+
+const removeWatchedMovie = (movieId) => {
+  setWatchedMovies(previous => {
+    const updated = previous.filter(m => m.imdbID !== movieId);
+    localStorage.setItem('watchedMovies', JSON.stringify(updated));
+    return updated;
+  });
+};
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route
           path="/history"
-          element={<WatchHistory movies={[]} onBack={() => window.history.back()} onOpenMovie={() => {}} onRemove={() => {}} />}
+          element={<WatchHistory movies={watchedMovies} onBack={() => window.history.back()} onOpenMovie={() => {}} onRemove={removeWatchedMovie} />}
         />
+        <Route
+  path="/movie/:id"
+  element={
+    <MovieDetailsPage
+      watchedMovies={watchedMovies}
+      addWatchedMovie={addWatchedMovie}
+      removeWatchedMovie={removeWatchedMovie}
+    />
+  }
+/>
       </Routes>
     </BrowserRouter>
   );
