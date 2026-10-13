@@ -5,8 +5,7 @@ import MovieDetails from './MovieDetails';
 import './App.css';
 
 
-const url = 'https://www.omdbapi.com?apikey=d008934e';
-
+const url = `https://www.omdbapi.com?apikey=${process.env.REACT_APP_OMDB_API_KEY}`;
 export default function MovieDetailsPage({
   watchedMovies,
   addWatchedMovie,

@@ -6,8 +6,7 @@ import { faMagnifyingGlass,faHouse,faClockRotateLeft,faFolderOpen} from '@fortaw
 import MovieCard from './MovieCard';
 import WatchHistory from './WatchHistory';
 import MovieDetailsPage from './MovieDetailsPage';
-const url = 'https://www.omdbapi.com?apikey=d008934e'
-
+const url = `https://www.omdbapi.com?apikey=${process.env.REACT_APP_OMDB_API_KEY}`;
 
 const Home = () => {
 
